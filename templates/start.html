@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NETMessenger Web - Авторизация</title>
+    <link rel="icon" href="{% if cdn_base %}{{ cdn_base }}{% endif %}/static/favicon.png">
+    {% include '_pwa.html' %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f5f5f5;
+            font-family: "Roboto", sans-serif;
+            margin: 0;
+            color: #222;
+        }
+
+        .auth-page {
+            max-width: 520px;
+            margin: 50px auto;
+            padding: 32px;
+            text-align: center;
+        }
+
+        .qr-card {
+            display: inline-flex;
+            position: relative;
+            align-items: center;
+            justify-content: center;
+            margin: 24px 0;
+            padding: 18px;
+            border-radius: 28px;
+            background: #fff;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+        }
+
+        .qr-code {
+            display: block;
+            width: 240px;
+            height: 240px;
+        }
+
+        .qr-logo {
+            position: absolute;
+            width: 58px;
+            height: 58px;
+            padding: 8px;
+            border-radius: 18px;
+            background: #a6ff9f;
+            box-shadow: 0 0 0 6px #fff;
+        }
+
+        .auth-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 24px;
+        }
+
+        button {
+            border: 0;
+            border-radius: 12px;
+            padding: 12px 18px;
+            font: inherit;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #e0e0e0;
+        }
+
+        .primary-btn {
+            background: #256c2d;
+            color: #fff;
+        }
+
+        .primary-btn:hover {
+            background: #1e5924;
+        }
+
+        .text-btn {
+            background: transparent;
+            color: #256c2d;
+        }
+
+        .text-btn:hover {
+            background: rgba(37, 108, 45, 0.1);
+        }
+
+        .input-field {
+            display: block;
+            width: 100%;
+            max-width: 280px;
+            margin: 24px auto;
+            padding: 16px;
+            border: 2px solid #ddd;
+            border-radius: 14px;
+            font-size: 18px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-field:focus {
+            border-color: #256c2d;
+        }
+    </style>
+</head>
+<body>
+    <main class="auth-page">
+        <h1>Авторизация в NETMessenger</h1>
+
+        <div id="qrSection">
+            <p>Откройте NETMessenger на устройстве</p>
+            <p>Откройте настройки &gt; Авторизация в новом аккаунте &gt; Подключение устройства</p>
+            <p>Отсканируйте QR-код, и вас перебросит в аккаунт</p>
+
+            <div class="qr-card" aria-label="QR-код для входа">
+                <img
+                    class="qr-code"
+                    id="loginQr"
+                    src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=12&data=NETMessenger"
+                    alt="QR-код для входа в NETMessenger"
+                >
+                <img class="qr-logo" src="/static/favicon.png" alt="">
+            </div>
+
+            <div class="auth-actions" id="authActions">
+                <button type="button" class="primary-btn" id="btnPhone">Войти через телефон</button>
+                <button type="button" class="text-btn" id="btnPasskey">Войти через ключ доступа</button>
+            </div>
+        </div>
+
+        <div id="phoneSection" style="display: none;">
+            <p>Введите ваш номер телефона для входа</p>
+            <input type="tel" id="phoneInput" placeholder="+7 (999) 000-00-00" class="input-field" autocomplete="tel">
+            
+            <div class="auth-actions" style="flex-direction: column; align-items: center;">
+                <button type="button" class="primary-btn" id="btnSubmitPhone" style="width: 100%; max-width: 280px;">Продолжить</button>
+                <button type="button" class="text-btn" id="btnBackToQr" style="margin-top: 8px;">Войти по QR-коду</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const loginQr = document.getElementById("loginQr");
+        const loginUrl = window.location.href;
+
+        loginQr.src = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=12&data=${encodeURIComponent(loginUrl)}`;
+
+        const qrSection = document.getElementById("qrSection");
+        const phoneSection = document.getElementById("phoneSection");
+        const phoneInput = document.getElementById("phoneInput");
+
+        // Переключение на вход по телефону
+        document.getElementById("btnPhone").addEventListener("click", () => {
+            qrSection.style.display = "none";
+            phoneSection.style.display = "block";
+            phoneInput.focus();
+        });
+
+        // Возврат к QR
+        document.getElementById("btnBackToQr").addEventListener("click", () => {
+            phoneSection.style.display = "none";
+            qrSection.style.display = "block";
+        });
+
+        // Обработка входа по телефону
+        document.getElementById("btnSubmitPhone").addEventListener("click", () => {
+            const phone = phoneInput.value.replace(/\D/g, "");
+            if (phone.length >= 10) {
+                alert(`Код отправлен на номер ${phoneInput.value}`);
+                window.location.href = "/home";
+            } else {
+                alert("Пожалуйста, введите корректный номер телефона");
+            }
+        });
+
+        // Вход через ключ доступа (Passkey / WebAuthn)
+        document.getElementById("btnPasskey").addEventListener("click", async () => {
+            try {
+                // Имитация вызова нативного ключа доступа браузера
+                if (!window.PublicKeyCredential) {
+                    alert("Ваш браузер не поддерживает ключи доступа (Passkeys).");
+                    return;
+                }
+
+                // Запрашиваем фейковый challenge (в реальности получаем с сервера)
+                const challenge = new Uint8Array(32);
+                window.crypto.getRandomValues(challenge);
+
+                const credential = await navigator.credentials.get({
+                    publicKey: {
+                        challenge: challenge,
+                        rpId: window.location.hostname,
+                        userVerification: "preferred",
+                        timeout: 60000
+                    }
+                });
+
+                if (credential) {
+                    window.location.href = "/home";
+                }
+            } catch (err) {
+                // Если мы тестируем локально без https, WebAuthn выбросит ошибку
+                if (err.name === "NotAllowedError" || err.message.includes("not supported") || window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+                    // Для демо-целей при локальной разработке делаем успешный вход
+                    if (confirm("Имитация ключа доступа (локальная среда). Продолжить вход?")) {
+                        window.location.href = "/home";
+                    }
+                } else {
+                    console.error("Ошибка авторизации:", err);
+                    alert("Авторизация отменена или произошла ошибка.");
+                }
+            }
+        });
+    </script>
+    <script src="{% if cdn_base %}{{ cdn_base }}{% endif %}/static/cache-register.js"></script>
+</body>
+</html>

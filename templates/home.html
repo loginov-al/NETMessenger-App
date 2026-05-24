@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NETMessenger Web - Главная</title>
+    <link rel="icon" href="{% if cdn_base %}{{ cdn_base }}{% endif %}/static/favicon.png">
+    {% include '_pwa.html' %}
+    <link rel="preconnect" href="https://esm.run" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script type="module">
+        try {
+            const { styles: typescaleStyles } = await import("https://esm.run/@material/web@1.5.1/typography/md-typescale-styles.js?bundle");
+            await import("https://esm.run/@material/web@1.5.1/all.js?bundle");
+            document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+            document.documentElement.classList.add("md-loaded");
+        } catch (error) {
+            console.error("Material Web не загрузился:", error);
+        }
+    </script>
+
+    <style>
+        :root {
+            --md-sys-color-primary: #256c2d;
+            --md-sys-color-on-primary: #ffffff;
+            --md-sys-color-primary-container: #a6ff9f;
+            --md-sys-color-on-primary-container: #06210a;
+            --md-sys-color-secondary-container: #d8ead4;
+            --md-sys-color-surface: #fbfdf7;
+            --md-sys-color-surface-container: #eef5ec;
+            --md-sys-color-surface-container-high: #e6eee3;
+            --md-sys-color-on-surface: #191d18;
+            --md-sys-color-on-surface-variant: #424940;
+            --md-sys-color-outline-variant: #c2c9bd;
+            --md-ref-typeface-brand: "Roboto";
+            --md-ref-typeface-plain: "Roboto";
+        }
+
+        :root.dark-theme {
+            --md-sys-color-surface: #1a1c19;
+            --md-sys-color-on-surface: #e2e3df;
+            --md-sys-color-surface-container: #2d312c;
+            --md-sys-color-surface-container-high: #3f443e;
+            --md-sys-color-outline-variant: #424940;
+            --md-sys-color-on-surface-variant: #c2c9bd;
+            --md-sys-color-primary-container: #0f5216;
+            --md-sys-color-on-primary-container: #a6ff9f;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--md-sys-color-outline-variant);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--md-sys-color-on-surface-variant);
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        .icon-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            background: transparent;
+            color: var(--md-sys-color-on-surface-variant);
+            cursor: pointer;
+        }
+
+        .icon-btn:hover {
+            background: var(--md-sys-color-surface-container-high);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px 12px 44px;
+            border: 1px solid var(--md-sys-color-outline-variant);
+            border-radius: 16px;
+            background: var(--md-sys-color-surface);
+            color: var(--md-sys-color-on-surface);
+            font: inherit;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--md-sys-color-primary);
+        }
+
+        .search-wrap {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-wrap .material-symbols-outlined {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--md-sys-color-on-surface-variant);
+            font-size: 20px;
+            pointer-events: none;
+        }
+
+        .fab-btn {
+            position: absolute;
+            bottom: 24px;
+            right: 24px;
+            z-index: 10;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px;
+            height: 56px;
+            border: none;
+            border-radius: 16px;
+            background: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+            cursor: pointer;
+        }
+
+        .fab-btn .material-symbols-outlined {
+            font-size: 24px;
+        }
+
+        .quick-create {
+            display: grid;
+            gap: 8px;
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        .quick-create-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 12px 14px;
+            border: none;
+            border-radius: 14px;
+            background: var(--md-sys-color-surface-container-high);
+            color: var(--md-sys-color-on-surface);
+            font: inherit;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .quick-create-btn:hover {
+            background: var(--md-sys-color-surface-container);
+        }
+
+        .sidebar-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            font-size: var(--app-font-size, 16px);
+            background:
+                radial-gradient(circle at top left, rgba(166, 255, 159, 0.38), transparent 34rem),
+                var(--md-sys-color-surface);
+            color: var(--md-sys-color-on-surface);
+            font-family: "Roboto", sans-serif;
+        }
+
+        body.compact-mode .sidebar {
+            padding: 16px;
+            gap: 12px;
+        }
+
+        body.compact-mode .avatar-circle {
+            width: 40px;
+            height: 40px;
+            font-size: 16px;
+        }
+
+        body.compact-mode .chat-header,
+        body.compact-mode .chat-input-area {
+            padding: 10px 12px;
+        }
+
+        .app {
+            display: grid;
+            grid-template-columns: var(--app-sidebar-width, 320px) 1fr;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 24px;
+            border-right: 1px solid var(--md-sys-color-outline-variant);
+            background: rgba(251, 253, 247, 0.82);
+            backdrop-filter: blur(18px);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand img {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+        }
+
+        .brand-title {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .brand-subtitle {
+            margin: 2px 0 0;
+            color: var(--md-sys-color-on-surface-variant);
+            font-size: 13px;
+        }
+
+        .search {
+            --md-outlined-text-field-container-shape: 16px;
+            width: 100%;
+        }
+
+        .quick-actions {
+            display: grid;
+            gap: 12px;
+        }
+
+        .chat-list-title {
+            margin: 4px 0 -8px;
+            color: var(--md-sys-color-on-surface-variant);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .empty-list {
+            display: grid;
+            place-items: center;
+            min-height: 180px;
+            padding: 22px;
+            border: 1px dashed var(--md-sys-color-outline-variant);
+            border-radius: 24px;
+            background: rgba(238, 245, 236, 0.72);
+            text-align: center;
+        }
+
+        .empty-list .material-symbols-outlined {
+            color: var(--md-sys-color-primary);
+            font-size: 40px;
+        }
+
+        .empty-list p {
+            margin: 8px 0 0;
+            color: var(--md-sys-color-on-surface-variant);
+            font-size: 14px;
+        }
+
+        .chat-list {
+            display: grid;
+            gap: 8px;
+            padding: 0;
+            background: transparent;
+        }
+
+        .chat-list[hidden],
+        .empty-list[hidden] {
+            display: none;
+        }
+
+        .chat-item {
+            --md-list-item-container-color: transparent;
+            --md-list-item-hover-state-layer-color: var(--md-sys-color-surface-container-high);
+            --md-list-item-pressed-state-layer-color: var(--md-sys-color-surface-container);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 0 8px;
+        }
+
+        .avatar-circle {
+            display: grid;
+            place-items: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .fab-new-chat {
+            position: absolute;
+            bottom: 24px;
+            right: 24px;
+            z-index: 10;
+        }
+
+        .hero {
+            display: grid;
+            place-items: center;
+            flex: 1;
+            padding: 32px;
+            height: 100vh;
+        }
+
+        .tg-empty-state-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .tg-empty-state {
+            padding: 6px 14px;
+            background: rgba(0, 0, 0, 0.12);
+            color: var(--md-sys-color-on-surface);
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 500;
+            user-select: none;
+        }
+
+        :root.dark-theme .tg-empty-state {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-layout {
+            display: flex;
+            flex: 1;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .chat-view {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            background: var(--md-sys-color-surface-container);
+            position: relative;
+        }
+
+        .chat-view::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0.05;
+            background-image: radial-gradient(var(--md-sys-color-on-surface) 1px, transparent 1px);
+            background-size: 20px 20px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .chat-header {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            border-bottom: 1px solid var(--md-sys-color-outline-variant);
+            background: var(--md-sys-color-surface);
+            cursor: pointer;
+        }
+
+        .chat-header:hover {
+            background: var(--md-sys-color-surface-container-high);
+        }
+
+        .chat-header-actions {
+            display: flex;
+            gap: 4px;
+            cursor: default;
+        }
+
+        .chat-header-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex: 1;
+        }
+
+        .chat-search-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--md-sys-color-surface);
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            gap: 12px;
+        }
+
+        .chat-info-panel {
+            width: 320px;
+            background: var(--md-sys-color-surface);
+            border-left: 1px solid var(--md-sys-color-outline-variant);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .chat-info-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--md-sys-color-outline-variant);
+            position: sticky;
+            top: 0;
+            background: var(--md-sys-color-surface);
+            z-index: 2;
+        }
+
+        .chat-system-message {
+            align-self: center;
+            background: var(--md-sys-color-surface-container-high);
+            color: var(--md-sys-color-on-surface-variant);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            margin: 12px 0;
+            user-select: none;
+        }
+
+        .chat-header-info h2 {
+            margin: 0;
+            color: var(--md-sys-color-on-surface);
+        }
+
+        .chat-header-info p {
+            margin: 2px 0 0;
+            color: var(--md-sys-color-primary);
+        }
+
+        .chat-avatar {
+            display: grid;
+            place-items: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+        }
+
+        .chat-messages {
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message {
+            position: relative;
+            max-width: 75%;
+            padding: 8px 12px;
+            font-size: 15px;
+            line-height: 1.4;
+            word-wrap: break-word;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .message-text {
+            display: inline;
+        }
+
+        .message-meta {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 4px;
+            float: right;
+            margin-top: 6px;
+            margin-left: 12px;
+            margin-bottom: -4px;
+            user-select: none;
+        }
+
+        .message-time {
+            font-size: 11px;
+            opacity: 0.6;
+        }
+
+        .message-status {
+            font-size: 14px;
+            color: var(--md-sys-color-on-primary-container);
+            opacity: 0.8;
+        }
+
+        .message.received {
+            align-self: flex-start;
+            background: var(--md-sys-color-surface);
+            color: var(--md-sys-color-on-surface);
+            border-radius: var(--app-bubble-received, 16px 16px 16px 4px);
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            background: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+            border-radius: var(--app-bubble-sent, 16px 16px 4px 16px);
+        }
+
+        .chat-input-area {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--md-sys-color-surface);
+            border-top: 1px solid var(--md-sys-color-outline-variant);
+        }
+
+        .message-input {
+            flex: 1;
+            --md-outlined-text-field-container-shape: 24px;
+            --md-outlined-text-field-top-space: 8px;
+            --md-outlined-text-field-bottom-space: 8px;
+        }
+
+        .back-btn {
+            display: none;
+        }
+
+        .toast {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            z-index: 10;
+            max-width: min(360px, calc(100vw - 44px));
+            padding: 14px 18px;
+            border-radius: 18px;
+            background: #191d18;
+            color: #fff;
+            box-shadow: 0 16px 36px rgba(25, 29, 24, 0.25);
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(12px);
+            transition: opacity 180ms ease, transform 180ms ease;
+        }
+
+        .toast.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .material-symbols-outlined {
+            font-family: "Material Symbols Outlined";
+            font-weight: normal;
+            font-style: normal;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            font-feature-settings: "liga";
+            -webkit-font-feature-settings: "liga";
+            -webkit-font-smoothing: antialiased;
+        }
+
+        @media (max-width: 780px) {
+            .app {
+                display: flex;
+                flex-direction: column;
+                height: 100vh;
+                overflow: hidden;
+            }
+
+            .sidebar {
+                order: 2;
+                flex: 1;
+                overflow-y: auto;
+                border-right: 0;
+            }
+
+            .content {
+                order: 1;
+                flex: none;
+                height: auto;
+            }
+
+            .hero {
+                display: none !important;
+            }
+
+            .content.chat-active {
+                position: fixed;
+                inset: 0;
+                z-index: 100;
+                height: 100vh;
+            }
+
+            .back-btn {
+                display: inline-flex;
+            }
+
+            .message {
+                max-width: 90%;
+            }
+
+            .chat-info-panel {
+                position: fixed;
+                inset: 0;
+                width: 100%;
+                z-index: 110;
+                border-left: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="app">
+        <aside class="sidebar" aria-label="Список чатов">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <img src="/static/favicon.png" alt="NETMessenger" style="width: 36px; height: 36px;">
+                    <p class="brand-title">NETMessenger</p>
+                </div>
+                <div class="sidebar-actions">
+                    <button class="icon-btn" id="themeToggle" aria-label="Сменить тему" type="button">
+                        <span class="material-symbols-outlined">dark_mode</span>
+                    </button>
+                    <button class="icon-btn" id="btnSettings" aria-label="Настройки" type="button" onclick="window.location.href='/settings'">
+                        <span class="material-symbols-outlined">settings</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="search-wrap">
+                <span class="material-symbols-outlined">search</span>
+                <input class="search-input" id="chatSearch" placeholder="Поиск" type="search">
+            </div>
+
+            <section class="empty-list" id="emptyList">
+                <div>
+                    <p>Нет чатов</p>
+                    <div class="quick-create">
+                        <button class="quick-create-btn" id="quickCreateGroup" type="button">
+                            <span class="material-symbols-outlined">group_add</span>
+                            Создать группу
+                        </button>
+                        <button class="quick-create-btn" id="quickCreateBot" type="button">
+                            <span class="material-symbols-outlined">smart_toy</span>
+                            Создать бота
+                        </button>
+                        <button class="quick-create-btn" id="quickCreateChannel" type="button">
+                            <span class="material-symbols-outlined">campaign</span>
+                            Создать канал
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <md-list class="chat-list" id="chatList" hidden></md-list>
+
+            <button class="fab-btn" id="fabNewChat" aria-label="Новый чат" type="button">
+                <span class="material-symbols-outlined">edit</span>
+            </button>
+
+            <div id="newChatPanel" style="display: none; flex-direction: column; position: absolute; inset: 0; background: var(--md-sys-color-surface); z-index: 20; padding: 24px;">
+                <div class="sidebar-header" style="margin-bottom: 20px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <md-icon-button id="backFromNewChat"><md-icon>arrow_back</md-icon></md-icon-button>
+                        <h2 style="margin: 0; font-size: 20px; color: var(--md-sys-color-on-surface); font-weight: 500;">Новое сообщение</h2>
+                    </div>
+                </div>
+                
+                <md-outlined-text-field id="newChatSearchInput" placeholder="Поиск..." type="search" style="margin-bottom: 12px;">
+                    <md-icon slot="leading-icon">search</md-icon>
+                </md-outlined-text-field>
+
+                <div style="overflow-y: auto; flex: 1; margin-right: -12px; padding-right: 12px;">
+                    <md-list style="background: transparent;">
+                        <md-list-item type="button" class="chat-item" id="actionCreateGroup">
+                            <div slot="start" class="avatar-circle" style="background: var(--md-sys-color-surface-container-high); color: var(--md-sys-color-on-surface);">
+                                <md-icon>group_add</md-icon>
+                            </div>
+                            <div slot="headline">Создать группу</div>
+                        </md-list-item>
+                        <md-list-item type="button" class="chat-item" id="actionCreateBot">
+                            <div slot="start" class="avatar-circle" style="background: var(--md-sys-color-surface-container-high); color: var(--md-sys-color-on-surface);">
+                                <md-icon>smart_toy</md-icon>
+                            </div>
+                            <div slot="headline">Создать бота</div>
+                        </md-list-item>
+                        <md-list-item type="button" class="chat-item" id="actionCreateChannel">
+                            <div slot="start" class="avatar-circle" style="background: var(--md-sys-color-surface-container-high); color: var(--md-sys-color-on-surface);">
+                                <md-icon>campaign</md-icon>
+                            </div>
+                            <div slot="headline">Создать канал</div>
+                        </md-list-item>
+                    </md-list>
+
+                    <div style="padding: 16px 16px 8px; font-weight: 500; font-size: 13px; color: var(--md-sys-color-primary); letter-spacing: 0.05em;">ЧАСТЫЕ КОНТАКТЫ</div>
+                    <md-list style="background: transparent;" id="suggestedContacts">
+                        <!-- Contacts injected by JS -->
+                    </md-list>
+                </div>
+            </div>
+
+            <!-- Panel for Creating a Group -->
+            <div id="createGroupPanel" style="display: none; flex-direction: column; position: absolute; inset: 0; background: var(--md-sys-color-surface); z-index: 30; padding: 24px;">
+                <div class="sidebar-header" style="margin-bottom: 20px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <md-icon-button id="backFromCreateGroup"><md-icon>arrow_back</md-icon></md-icon-button>
+                        <h2 style="margin: 0; font-size: 20px; color: var(--md-sys-color-on-surface); font-weight: 500;">Создать группу</h2>
+                    </div>
+                </div>
+
+                <div style="overflow-y: auto; flex: 1; margin-right: -12px; padding-right: 12px; display: flex; flex-direction: column; align-items: center;">
+                    <div class="avatar-circle" style="width: 100px; height: 100px; font-size: 40px; margin-bottom: 24px; cursor: pointer; position: relative; overflow: hidden;" id="groupAvatarUploadBtn">
+                        <md-icon style="font-size: 40px; width: 40px; height: 40px;" id="groupAvatarIcon">camera_alt</md-icon>
+                        <input type="file" id="groupAvatarInput" accept="image/*" style="display: none;">
+                    </div>
+
+                    <md-outlined-text-field id="groupNameInput" label="Имя группы" style="width: 100%; margin-bottom: 16px;"></md-outlined-text-field>
+                    <md-outlined-text-field id="groupDescInput" label="Описание (необязательно)" type="textarea" rows="2" style="width: 100%; margin-bottom: 24px;"></md-outlined-text-field>
+
+                    <div style="width: 100%; text-align: left; padding: 0 8px 8px; font-weight: 500; font-size: 13px; color: var(--md-sys-color-primary); letter-spacing: 0.05em;">ПРИГЛАСИТЬ УЧАСТНИКОВ</div>
+                    <md-list style="width: 100%; background: transparent;" id="groupContactsList">
+                        <!-- Contacts to invite -->
+                    </md-list>
+                </div>
+
+                <div style="padding-top: 16px; text-align: right;">
+                    <md-filled-button id="btnCreateGroupDone">
+                        <md-icon slot="icon">check</md-icon>
+                        Создать
+                    </md-filled-button>
+                </div>
+            </div>
+
+            <!-- Panel for Creating a Channel -->
+            <div id="createChannelPanel" style="display: none; flex-direction: column; position: absolute; inset: 0; background: var(--md-sys-color-surface); z-index: 30; padding: 24px;">
+                <div class="sidebar-header" style="margin-bottom: 20px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <md-icon-button id="backFromCreateChannel"><md-icon>arrow_back</md-icon></md-icon-button>
+                        <h2 style="margin: 0; font-size: 20px; color: var(--md-sys-color-on-surface); font-weight: 500;">Создать канал</h2>
+                    </div>
+                </div>
+
+                <div style="overflow-y: auto; flex: 1; margin-right: -12px; padding-right: 12px; display: flex; flex-direction: column; align-items: center;">
+                    <div class="avatar-circle" style="width: 100px; height: 100px; font-size: 40px; margin-bottom: 24px; cursor: pointer; position: relative; overflow: hidden;" id="channelAvatarUploadBtn">
+                        <md-icon style="font-size: 40px; width: 40px; height: 40px;" id="channelAvatarIcon">camera_alt</md-icon>
+                        <input type="file" id="channelAvatarInput" accept="image/*" style="display: none;">
+                    </div>
+
+                    <md-outlined-text-field id="channelNameInput" label="Название канала" style="width: 100%; margin-bottom: 16px;"></md-outlined-text-field>
+                    <md-outlined-text-field id="channelUsernameInput" label="Юзернейм (например: news)" style="width: 100%; margin-bottom: 16px;"></md-outlined-text-field>
+                    <md-outlined-text-field id="channelDescInput" label="Описание канала" type="textarea" rows="3" style="width: 100%; margin-bottom: 24px;"></md-outlined-text-field>
+                </div>
+
+                <div style="padding-top: 16px; text-align: right;">
+                    <md-filled-button id="btnCreateChannelDone">
+                        <md-icon slot="icon">check</md-icon>
+                        Создать канал
+                    </md-filled-button>
+                </div>
+            </div>
+        </aside>
+
+        <section class="content">
+            <div class="hero" id="mainHero">
+                <div class="tg-empty-state-container">
+                    <div class="empty-icon" style="margin-bottom: 24px; background: transparent; color: var(--md-sys-color-primary);">
+                        <span class="material-symbols-outlined" style="font-size: 80px;" aria-hidden="true">forum</span>
+                    </div>
+                    <div class="tg-empty-state">
+                        Выберите чат, чтобы начать общение
+                    </div>
+                    <p style="color: var(--md-sys-color-on-surface-variant); margin-top: 16px; font-size: 14px;">Отправляйте и получайте сообщения с любого устройства.</p>
+                </div>
+            </div>
+
+            <div class="chat-layout" id="chatLayout" hidden>
+                <div class="chat-view" id="chatView">
+                    <header class="chat-header" id="chatHeader">
+                        <div class="chat-header-info">
+                            <md-icon-button id="backButton" class="back-btn">
+                                <md-icon>arrow_back</md-icon>
+                            </md-icon-button>
+                            <div class="chat-avatar" id="chatHeaderAvatarCircle">
+                                <md-icon id="chatHeaderIcon">chat</md-icon>
+                            </div>
+                            <div>
+                                <h2 class="md-typescale-title-large" id="chatHeaderTitle">Чат</h2>
+                                <p class="md-typescale-body-small">В сети</p>
+                            </div>
+                        </div>
+                        <div class="chat-header-actions" id="chatHeaderActions">
+                            <md-icon-button id="chatSearchBtn"><md-icon>search</md-icon></md-icon-button>
+                            <md-icon-button id="chatMoreBtn"><md-icon>more_vert</md-icon></md-icon-button>
+                        </div>
+                        
+                        <div class="chat-search-bar" id="chatSearchBar" hidden>
+                            <md-icon-button id="closeChatSearch"><md-icon>arrow_back</md-icon></md-icon-button>
+                            <md-outlined-text-field id="chatMessageSearch" placeholder="Поиск сообщений..." type="search" style="flex: 1; --md-outlined-text-field-container-shape: 16px;"></md-outlined-text-field>
+                        </div>
+                    </header>
+                    <div class="chat-messages" id="chatMessages">
+                        <!-- Messages go here -->
+                    </div>
+                    <div class="chat-input-area" style="position: relative;">
+                        <md-icon-button id="emojiButton"><md-icon>sentiment_satisfied</md-icon></md-icon-button>
+                        <md-icon-button id="attachButton"><md-icon>attach_file</md-icon></md-icon-button>
+                        <input type="file" id="attachInput" accept="image/*,video/*" multiple style="display: none;">
+                        
+                        <div id="emojiPicker" style="display: none; position: absolute; bottom: 70px; left: 16px; background: var(--md-sys-color-surface-container-high); padding: 12px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); gap: 4px; flex-wrap: wrap; width: 280px; max-height: 200px; overflow-y: auto; z-index: 100;">
+                            <!-- Emojis injected by JS -->
+                        </div>
+
+                        <md-outlined-text-field id="messageInput" placeholder="Написать сообщение..." class="message-input"></md-outlined-text-field>
+                        <md-filled-icon-button id="sendButton">
+                            <md-icon id="sendIcon">mic</md-icon>
+                        </md-filled-icon-button>
+                    </div>
+                </div>
+
+                <aside class="chat-info-panel" id="chatInfoPanel" hidden>
+                    <div class="chat-info-header">
+                        <md-icon-button id="closeChatInfo"><md-icon>close</md-icon></md-icon-button>
+                        <h2 style="margin: 0; font-size: 20px; font-weight: 500;">Информация</h2>
+                    </div>
+                    <div style="padding: 24px; text-align: center; border-bottom: 8px solid var(--md-sys-color-surface-container);">
+                        <div class="avatar-circle" id="infoAvatarIcon" style="width: 120px; height: 120px; margin: 0 auto 16px; font-size: 48px; background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary);">
+                            <md-icon style="font-size: 48px; width: 48px; height: 48px;">person</md-icon>
+                        </div>
+                        <h2 id="infoTitle" style="margin: 0; font-size: 22px;">Имя</h2>
+                        <p id="infoSubtitle" style="margin: 4px 0 0; color: var(--md-sys-color-on-surface-variant); font-size: 14px;">В сети</p>
+                        <p id="infoDescription" style="margin: 12px 0 0; color: var(--md-sys-color-on-surface-variant); font-size: 14px; line-height: 1.5; display: none;"></p>
+                    </div>
+                    <md-list>
+                        <md-list-item type="button">
+                            <md-icon slot="start">notifications</md-icon>
+                            <div slot="headline">Уведомления</div>
+                            <md-switch slot="end" selected></md-switch>
+                        </md-list-item>
+                        <md-list-item type="button">
+                            <md-icon slot="start">image</md-icon>
+                            <div slot="headline">Медиа, ссылки и файлы</div>
+                            <div slot="trailing-supporting-text">0</div>
+                        </md-list-item>
+                        <md-list-item type="button" id="actionClearHistory">
+                            <md-icon slot="start" style="color: #d32f2f;">delete</md-icon>
+                            <div slot="headline" style="color: #d32f2f;">Очистить историю</div>
+                        </md-list-item>
+                    </md-list>
+                </aside>
+            </div>
+        </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="{% if cdn_base %}{{ cdn_base }}{% endif %}/static/cache-register.js"></script>
+    <script src="{% if cdn_base %}{{ cdn_base }}{% endif %}/static/ui-prefs.js"></script>
+    <script>
+        const chatSearch = document.getElementById("chatSearch");
+        const chatList = document.getElementById("chatList");
+        const emptyList = document.getElementById("emptyList");
+        const toast = document.getElementById("toast");
+        const fabNewChat = document.getElementById("fabNewChat");
+        const newChatPanel = document.getElementById("newChatPanel");
+        const backFromNewChat = document.getElementById("backFromNewChat");
+        const actionCreateGroup = document.getElementById("actionCreateGroup");
+        const actionCreateBot = document.getElementById("actionCreateBot");
+        const actionCreateChannel = document.getElementById("actionCreateChannel");
+        const suggestedContacts = document.getElementById("suggestedContacts");
+
+        const createGroupPanel = document.getElementById("createGroupPanel");
+        const backFromCreateGroup = document.getElementById("backFromCreateGroup");
+        const btnCreateGroupDone = document.getElementById("btnCreateGroupDone");
+        const groupNameInput = document.getElementById("groupNameInput");
+        const groupDescInput = document.getElementById("groupDescInput");
+        const groupContactsList = document.getElementById("groupContactsList");
+        const groupAvatarUploadBtn = document.getElementById("groupAvatarUploadBtn");
+        const groupAvatarInput = document.getElementById("groupAvatarInput");
+        const groupAvatarIcon = document.getElementById("groupAvatarIcon");
+        let groupAvatarDataUrl = null;
+
+        const createChannelPanel = document.getElementById("createChannelPanel");
+        const backFromCreateChannel = document.getElementById("backFromCreateChannel");
+        const btnCreateChannelDone = document.getElementById("btnCreateChannelDone");
+        const channelNameInput = document.getElementById("channelNameInput");
+        const channelUsernameInput = document.getElementById("channelUsernameInput");
+        const channelDescInput = document.getElementById("channelDescInput");
+        const channelAvatarUploadBtn = document.getElementById("channelAvatarUploadBtn");
+        const channelAvatarInput = document.getElementById("channelAvatarInput");
+        const channelAvatarIcon = document.getElementById("channelAvatarIcon");
+        let channelAvatarDataUrl = null;
+
+        const mainHero = document.getElementById("mainHero");
+        const chatLayout = document.getElementById("chatLayout");
+        const chatHeaderTitle = document.getElementById("chatHeaderTitle");
+        const chatHeaderIcon = document.getElementById("chatHeaderIcon");
+        const chatHeaderAvatarCircle = document.getElementById("chatHeaderAvatarCircle");
+        const chatHeaderSubtitle = chatHeaderTitle.nextElementSibling;
+        const backButton = document.getElementById("backButton");
+        const chatMessages = document.getElementById("chatMessages");
+        const messageInput = document.getElementById("messageInput");
+        const sendButton = document.getElementById("sendButton");
+        const sendIcon = document.getElementById("sendIcon");
+        const themeToggle = document.getElementById("themeToggle");
+
+        const chatHeaderInfo = document.querySelector(".chat-header-info");
+        const chatInfoPanel = document.getElementById("chatInfoPanel");
+        const closeChatInfo = document.getElementById("closeChatInfo");
+        const infoTitle = document.getElementById("infoTitle");
+        const infoSubtitle = document.getElementById("infoSubtitle");
+        const infoDescription = document.getElementById("infoDescription");
+        const infoAvatarIcon = document.getElementById("infoAvatarIcon");
+
+        const chatSearchBtn = document.getElementById("chatSearchBtn");
+        const chatSearchBar = document.getElementById("chatSearchBar");
+        const closeChatSearch = document.getElementById("closeChatSearch");
+        const chatMessageSearch = document.getElementById("chatMessageSearch");
+
+        let chats = JSON.parse(localStorage.getItem("net_chats") || "[]");
+        if (!Array.isArray(chats)) chats = [];
+        chats = chats
+            .filter((chat) => chat && typeof chat === "object")
+            .map((chat) => ({
+                ...chat,
+                name: chat.name || "Без названия",
+                message: chat.message || "",
+                icon: chat.icon || "chat",
+                messages: Array.isArray(chat.messages) ? chat.messages : []
+            }));
+        let currentChat = null;
+        let toastTimer;
+
+        applyUiPrefs();
+
+        function saveChats() {
+            localStorage.setItem('net_chats', JSON.stringify(chats));
+        }
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add("is-visible");
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove("is-visible"), 2600);
+        }
+
+        function setThemeIcon(isDark) {
+            const icon = themeToggle.querySelector(".material-symbols-outlined, md-icon");
+            if (icon) icon.textContent = isDark ? "light_mode" : "dark_mode";
+        }
+
+        const isDark = localStorage.getItem("theme") === "dark";
+        if (isDark) {
+            document.documentElement.classList.add("dark-theme");
+            setThemeIcon(true);
+        }
+
+        themeToggle.addEventListener("click", () => {
+            document.documentElement.classList.toggle("dark-theme");
+            const darkActive = document.documentElement.classList.contains("dark-theme");
+            setThemeIcon(darkActive);
+            localStorage.setItem("theme", darkActive ? "dark" : "light");
+        });
+
+        function getChatStatus(chat) {
+            if (chat.type === "channel") {
+                return chat.username ? chat.username : "Канал";
+            }
+            if (chat.type === "group" || chat.icon === "groups") {
+                return "Группа";
+            }
+            if (chat.icon === "smart_toy" || chat.id === "botfather") {
+                return "Бот";
+            }
+            return "В сети";
+        }
+
+        function formatAvatarStyle(customAvatar) {
+            if (!customAvatar) return null;
+            if (customAvatar.startsWith("url(")) return customAvatar;
+            return `url(${customAvatar})`;
+        }
+
+        function renderChats() {
+            const query = String(chatSearch.value ?? "").trim().toLowerCase();
+            const visibleChats = chats.filter((chat) => (chat.name || "").toLowerCase().includes(query));
+
+            chatList.innerHTML = "";
+            chatList.hidden = visibleChats.length === 0;
+            emptyList.hidden = chats.length > 0 && visibleChats.length > 0;
+
+            if (chats.length > 0 && visibleChats.length === 0) {
+                emptyList.querySelector("p").textContent = "По этому запросу ничего не найдено";
+                return;
+            }
+
+            emptyList.querySelector("p").textContent = "Пока здесь пусто";
+
+            visibleChats.forEach((chat) => {
+                const item = document.createElement("md-list-item");
+                item.className = "chat-item";
+                item.type = "button";
+                
+                let avatarContent = `<md-icon>${chat.icon}</md-icon>`;
+                let avatarStyle = `background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary);`;
+                
+                if (chat.customAvatar) {
+                    avatarContent = "";
+                    avatarStyle = `background-image: ${formatAvatarStyle(chat.customAvatar)}; background-size: cover; background-position: center;`;
+                }
+
+                item.innerHTML = `
+                    <div slot="start" class="avatar-circle" style="${avatarStyle}">
+                        ${avatarContent}
+                    </div>
+                    <div slot="headline">${chat.name}</div>
+                    <div slot="supporting-text">${chat.message}</div>
+                `;
+                item.addEventListener("click", () => openChat(chat));
+                chatList.append(item);
+            });
+        }
+
+        function openChat(chat) {
+            currentChat = chat;
+            mainHero.hidden = true;
+            chatLayout.hidden = false;
+            document.querySelector('.content').classList.add('chat-active');
+            
+            chatHeaderTitle.textContent = chat.name;
+            chatHeaderIcon.textContent = chat.icon;
+            infoTitle.textContent = chat.name;
+            
+            if (chat.customAvatar) {
+                const avatarStyle = formatAvatarStyle(chat.customAvatar);
+                chatHeaderAvatarCircle.style.backgroundImage = avatarStyle;
+                chatHeaderAvatarCircle.style.backgroundSize = "cover";
+                chatHeaderIcon.style.display = "none";
+
+                infoAvatarIcon.style.backgroundImage = avatarStyle;
+                infoAvatarIcon.style.backgroundSize = "cover";
+                infoAvatarIcon.innerHTML = "";
+            } else {
+                chatHeaderAvatarCircle.style.backgroundImage = "";
+                chatHeaderIcon.style.display = "";
+
+                infoAvatarIcon.style.backgroundImage = "";
+                infoAvatarIcon.innerHTML = `<md-icon style="font-size: 48px; width: 48px; height: 48px;">${chat.icon}</md-icon>`;
+            }
+
+            const statusText = getChatStatus(chat);
+            chatHeaderSubtitle.textContent = statusText;
+            infoSubtitle.textContent = statusText;
+
+            if (chat.description) {
+                infoDescription.textContent = chat.description;
+                infoDescription.style.display = "block";
+            } else {
+                infoDescription.textContent = "";
+                infoDescription.style.display = "none";
+            }
+
+            messageInput.placeholder = chat.type === "channel" ? "Опубликовать пост..." : "Написать сообщение...";
+            
+            chatMessages.innerHTML = '';
+            if (chat.messages) {
+                chat.messages.forEach(msg => appendMessage(msg.text, msg.sent, msg.attachment));
+            } else {
+                chat.messages = [];
+                const sysDiv = document.createElement("div");
+                sysDiv.className = "chat-system-message";
+                sysDiv.textContent = "Чат создан";
+                chatMessages.appendChild(sysDiv);
+            }
+        }
+
+        function closeChat() {
+            currentChat = null;
+            mainHero.hidden = false;
+            chatLayout.hidden = true;
+            chatInfoPanel.hidden = true;
+            chatSearchBar.hidden = true;
+            document.querySelector('.content').classList.remove('chat-active');
+        }
+
+        backButton.addEventListener("click", closeChat);
+
+        chatHeaderInfo.addEventListener("click", () => {
+            chatInfoPanel.hidden = false;
+        });
+
+        closeChatInfo.addEventListener("click", () => {
+            chatInfoPanel.hidden = true;
+        });
+
+        chatSearchBtn.addEventListener("click", () => {
+            chatSearchBar.hidden = false;
+            chatMessageSearch.focus();
+        });
+
+        closeChatSearch.addEventListener("click", () => {
+            chatSearchBar.hidden = true;
+            chatMessageSearch.value = "";
+            filterMessages("");
+        });
+
+        document.getElementById("actionClearHistory").addEventListener("click", () => {
+            if (confirm("Вы уверены, что хотите очистить историю сообщений?")) {
+                if (currentChat) {
+                    currentChat.messages = [];
+                    currentChat.message = "История очищена";
+                    saveChats();
+                }
+                chatMessages.innerHTML = "";
+                renderChats();
+                chatInfoPanel.hidden = true;
+                showToast("История очищена");
+            }
+        });
+
+        chatMessageSearch.addEventListener("input", (e) => {
+            filterMessages(e.target.value);
+        });
+
+        function filterMessages(query) {
+            query = query.toLowerCase();
+            const msgs = chatMessages.querySelectorAll(".message");
+            msgs.forEach(msg => {
+                const textEl = msg.querySelector(".message-text");
+                const text = textEl ? textEl.textContent.toLowerCase() : "";
+                msg.style.display = text.includes(query) ? "" : "none";
+            });
+        }
+
+        function appendMessage(text, isSent, attachment = null) {
+            const div = document.createElement("div");
+            div.className = "message " + (isSent ? "sent" : "received");
+            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            let statusIcon = isSent ? `<md-icon class="message-status">done_all</md-icon>` : "";
+            
+            let attachmentHtml = "";
+            if (attachment) {
+                if (attachment.type.startsWith('image/')) {
+                    attachmentHtml = `<img src="${attachment.url}" style="max-width: 100%; border-radius: 12px; margin-bottom: 4px; max-height: 300px; object-fit: cover; display: block;">`;
+                } else if (attachment.type.startsWith('video/')) {
+                    attachmentHtml = `<video src="${attachment.url}" controls style="max-width: 100%; border-radius: 12px; margin-bottom: 4px; max-height: 300px; background: #000; display: block;"></video>`;
+                }
+            }
+
+            div.innerHTML = `
+                ${attachmentHtml}
+                <div class="message-text" style="${!text ? 'display: none;' : ''}"></div>
+                <div class="message-meta">
+                    <span class="message-time">${time}</span>
+                    ${statusIcon}
+                </div>
+            `;
+            if (text) {
+                div.querySelector(".message-text").textContent = text;
+            }
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            if (currentChat) {
+                if (attachment) {
+                    currentChat.message = attachment.type.startsWith('image/') ? '📷 Фото' : '🎥 Видео';
+                } else {
+                    currentChat.message = text;
+                }
+                renderChats();
+            }
+        }
+
+        function handleSend() {
+            const text = messageInput.value.trim();
+            if (!text && sendIcon.textContent === "mic") {
+                showToast("Запись голосового сообщения пока недоступна");
+                return;
+            }
+            if (!text || !currentChat) return;
+            
+            appendMessage(text, true);
+            currentChat.messages.push({text, sent: true});
+            saveChats();
+            messageInput.value = "";
+            sendIcon.textContent = "mic";
+
+            // BotFather state machine
+            if (currentChat.id === "botfather") {
+                setTimeout(() => {
+                    let reply = "";
+                    if (currentChat.botState === 0) {
+                        if (text.toLowerCase() === "/newbot") {
+                            reply = "Отлично! Как мы назовем бота? Напиши имя.";
+                            currentChat.botState = 1;
+                        } else {
+                            reply = "Я понимаю только команду /newbot.";
+                        }
+                    } else if (currentChat.botState === 1) {
+                        reply = `Хорошо. Теперь придумай юзернейм для бота (он должен заканчиваться на bot).`;
+                        currentChat.botState = 2;
+                    } else if (currentChat.botState === 2) {
+                        if (text.toLowerCase().endsWith("bot")) {
+                            reply = "Почти готово! Можешь прислать фото для бота (просто отправь любой текст для пропуска).";
+                            currentChat.botState = 3;
+                        } else {
+                            reply = "Юзернейм должен заканчиваться на 'bot'. Попробуй еще раз.";
+                        }
+                    } else if (currentChat.botState === 3) {
+                        reply = "Бот успешно создан! Вот твой токен: 12345:ABCDEF...\nМожешь найти его в списке чатов.";
+                        currentChat.botState = 0;
+                        addChat({
+                            name: "Новый Бот",
+                            message: "Бот успешно подключен",
+                            icon: "smart_toy"
+                        });
+                    }
+                    appendMessage(reply, false);
+                    currentChat.messages.push({text: reply, sent: false});
+                    saveChats();
+                }, 600);
+            }
+        }
+
+        sendButton.addEventListener("click", handleSend);
+        
+        messageInput.addEventListener("input", () => {
+            sendIcon.textContent = messageInput.value.trim() ? "send" : "mic";
+        });
+        
+        messageInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") handleSend();
+        });
+
+        function addChat(chat) {
+            if (!chat.id) {
+                chat.id = "chat_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
+            }
+            if (!chat.messages) chat.messages = [];
+            chats.unshift(chat);
+            saveChats();
+            renderChats();
+            showToast(`${chat.name} добавлен в список чатов`);
+        }
+
+        // Emoji logic
+        const emojiButton = document.getElementById("emojiButton");
+        const emojiPicker = document.getElementById("emojiPicker");
+        const commonEmojis = ["😀","😂","😅","😍","🥰","😎","🤩","😏","🤔","😐","😑","😶","🙄","😥","😮","🤐","😯","😪","😫","😴","😌","😛","😜","😝","🤤","😒","😓","😔","😕","🙃","🤑","😲","☹️","🙁","😖","😞","😟","😤","😢","😭","😦","😧","😨","😩","🤯","😬","😰","😱","😳","🤪","😵","😡","😠","🤬","😷","🤒","🤕","🤢","🤮","🤧","😇","🤠","🤡","🤥","🤫","🤭","🧐","🤓","😈","👿","👹","👺","💀","👻","👽","🤖","💩","😺","😸","😹","😻","😼","😽","🙀","😿","😾","❤️","🧡","💛","💚","💙","💜","🖤","🤍","🤎","💔","❣️","💕","💞","💓","💗","💖","💘","💝","💟","👍","👎","👊","✊","🤛","🤜","🤞","✌️","🤟","🤘","👌","🤌","🤏","👈","👉","👆","👇","☝️","✋","🤚","🖐","🖖","👋","🤙","💪","🦾","🖕","✍️","🙏","🦶","🦵","🦿","💄","💋","👄","🦷","👅","👂","🦻","👃","👣","👁","👀","🧠","🗣","👤","👥","🫂"];
+
+        emojiPicker.innerHTML = commonEmojis.map(e => `<span class="emoji-item" style="cursor: pointer; font-size: 24px; padding: 4px; border-radius: 8px; user-select: none;">${e}</span>`).join('');
+
+        emojiPicker.addEventListener("click", (e) => {
+            if (e.target.classList.contains("emoji-item")) {
+                messageInput.value += e.target.textContent;
+                messageInput.focus();
+                sendIcon.textContent = "send";
+            }
+        });
+
+        emojiButton.addEventListener("click", (e) => {
+            e.stopPropagation();
+            emojiPicker.style.display = emojiPicker.style.display === "flex" ? "none" : "flex";
+        });
+
+        document.addEventListener("click", (e) => {
+            if (!emojiPicker.contains(e.target) && e.target !== emojiButton) {
+                emojiPicker.style.display = "none";
+            }
+        });
+
+        // Attachment logic
+        const attachButton = document.getElementById("attachButton");
+        const attachInput = document.getElementById("attachInput");
+
+        attachButton.addEventListener("click", () => {
+            if (!currentChat) {
+                showToast("Выберите чат для отправки файла");
+                return;
+            }
+            attachInput.click();
+        });
+
+        attachInput.addEventListener("change", (e) => {
+            if (!currentChat) return;
+            const files = Array.from(e.target.files);
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    const url = ev.target.result;
+                    const attachment = { type: file.type, url: url };
+                    appendMessage("", true, attachment);
+                    currentChat.messages.push({text: "", sent: true, attachment: attachment});
+                    saveChats();
+                };
+                reader.readAsDataURL(file);
+            });
+            attachInput.value = ""; // reset
+        });
+
+        function initSuggestedContacts() {
+            const mockUsers = [
+                { name: "Алексей Смирнов", status: "В сети", initial: "А", icon: "person" },
+                { name: "Мария Иванова", status: "Был(а) недавно", initial: "М", icon: "person" },
+                { name: "Иван Петров", status: "Был(а) вчера", initial: "И", icon: "person" }
+            ];
+            
+            suggestedContacts.innerHTML = "";
+            groupContactsList.innerHTML = "";
+            
+            mockUsers.forEach(user => {
+                // For New Chat panel
+                const item = document.createElement("md-list-item");
+                item.className = "chat-item";
+                item.type = "button";
+                item.innerHTML = `
+                    <div slot="start" class="avatar-circle" style="background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary);">
+                        ${user.initial}
+                    </div>
+                    <div slot="headline">${user.name}</div>
+                    <div slot="supporting-text">${user.status}</div>
+                `;
+                item.addEventListener("click", () => {
+                    newChatPanel.style.display = "none";
+                    addChat({
+                        name: user.name,
+                        message: "Привет!",
+                        icon: user.icon
+                    });
+                });
+                suggestedContacts.append(item);
+
+                // For Group Creation panel (checkboxes)
+                const groupItem = document.createElement("md-list-item");
+                groupItem.className = "chat-item";
+                groupItem.type = "button";
+                groupItem.innerHTML = `
+                    <div slot="start" class="avatar-circle" style="background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary);">
+                        ${user.initial}
+                    </div>
+                    <div slot="headline">${user.name}</div>
+                    <md-checkbox slot="end"></md-checkbox>
+                `;
+                // Toggle checkbox on click
+                groupItem.addEventListener("click", (e) => {
+                    const cb = groupItem.querySelector("md-checkbox");
+                    if (e.target !== cb) {
+                        cb.checked = !cb.checked;
+                    }
+                });
+                groupContactsList.append(groupItem);
+            });
+        }
+
+        initSuggestedContacts();
+
+        fabNewChat.addEventListener("click", () => {
+            newChatPanel.style.display = "flex";
+        });
+
+        document.getElementById("quickCreateGroup").addEventListener("click", () => actionCreateGroup.click());
+        document.getElementById("quickCreateBot").addEventListener("click", () => actionCreateBot.click());
+        document.getElementById("quickCreateChannel").addEventListener("click", () => actionCreateChannel.click());
+
+        backFromNewChat.addEventListener("click", () => {
+            newChatPanel.style.display = "none";
+        });
+
+        actionCreateGroup.addEventListener("click", () => {
+            newChatPanel.style.display = "none";
+            createGroupPanel.style.display = "flex";
+            groupNameInput.value = "";
+            groupDescInput.value = "";
+            groupAvatarDataUrl = null;
+            groupAvatarUploadBtn.style.backgroundImage = "";
+            groupAvatarIcon.style.display = "";
+            const checkboxes = groupContactsList.querySelectorAll("md-checkbox");
+            checkboxes.forEach(cb => cb.checked = false);
+        });
+
+        actionCreateChannel.addEventListener("click", () => {
+            newChatPanel.style.display = "none";
+            createChannelPanel.style.display = "flex";
+            channelNameInput.value = "";
+            channelUsernameInput.value = "";
+            channelDescInput.value = "";
+            channelAvatarDataUrl = null;
+            channelAvatarUploadBtn.style.backgroundImage = "";
+            channelAvatarIcon.style.display = "";
+        });
+
+        backFromCreateChannel.addEventListener("click", () => {
+            createChannelPanel.style.display = "none";
+            newChatPanel.style.display = "flex";
+        });
+
+        channelAvatarUploadBtn.addEventListener("click", () => {
+            channelAvatarInput.click();
+        });
+
+        channelAvatarInput.addEventListener("change", (e) => {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    channelAvatarDataUrl = ev.target.result;
+                    channelAvatarUploadBtn.style.backgroundImage = `url(${channelAvatarDataUrl})`;
+                    channelAvatarUploadBtn.style.backgroundSize = "cover";
+                    channelAvatarIcon.style.display = "none";
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        btnCreateChannelDone.addEventListener("click", () => {
+            const name = channelNameInput.value.trim();
+            const usernameRaw = channelUsernameInput.value.trim().replace(/^@/, "");
+            const description = channelDescInput.value.trim();
+
+            if (!name) {
+                showToast("Введите название канала");
+                return;
+            }
+            if (!usernameRaw) {
+                showToast("Введите юзернейм канала");
+                return;
+            }
+            if (!/^[a-zA-Z0-9_]{3,32}$/.test(usernameRaw)) {
+                showToast("Юзернейм: 3–32 символа, только буквы, цифры и _");
+                return;
+            }
+
+            const username = "@" + usernameRaw.toLowerCase();
+            const duplicate = chats.some((chat) => chat.username === username);
+            if (duplicate) {
+                showToast("Канал с таким юзернеймом уже существует");
+                return;
+            }
+
+            createChannelPanel.style.display = "none";
+
+            addChat({
+                type: "channel",
+                name,
+                username,
+                description,
+                message: "Канал создан",
+                icon: "campaign",
+                customAvatar: channelAvatarDataUrl
+            });
+        });
+
+        backFromCreateGroup.addEventListener("click", () => {
+            createGroupPanel.style.display = "none";
+            newChatPanel.style.display = "flex";
+        });
+
+        groupAvatarUploadBtn.addEventListener("click", () => {
+            groupAvatarInput.click();
+        });
+
+        groupAvatarInput.addEventListener("change", (e) => {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    groupAvatarDataUrl = ev.target.result;
+                    groupAvatarUploadBtn.style.backgroundImage = `url(${groupAvatarDataUrl})`;
+                    groupAvatarUploadBtn.style.backgroundSize = "cover";
+                    groupAvatarIcon.style.display = "none";
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        btnCreateGroupDone.addEventListener("click", () => {
+            const name = groupNameInput.value.trim();
+            const description = groupDescInput.value.trim();
+            if (!name) {
+                showToast("Введите имя группы");
+                return;
+            }
+            createGroupPanel.style.display = "none";
+            
+            let membersCount = 0;
+            const checkboxes = groupContactsList.querySelectorAll("md-checkbox");
+            checkboxes.forEach(cb => { if (cb.checked) membersCount++; });
+
+            addChat({
+                type: "group",
+                name,
+                description,
+                message: membersCount > 0 ? `Добавлено участников: ${membersCount}` : "Группа создана",
+                icon: "groups",
+                customAvatar: groupAvatarDataUrl
+            });
+        });
+
+        actionCreateBot.addEventListener("click", () => {
+            newChatPanel.style.display = "none";
+            // Check if BotFather already exists
+            let botFatherChat = chats.find(c => c.id === "botfather");
+            if (!botFatherChat) {
+                botFatherChat = {
+                    id: "botfather",
+                    name: "NET BotFather",
+                    message: "Бот для создания ботов",
+                    icon: "smart_toy",
+                    botState: 0,
+                    messages: []
+                };
+                chats.unshift(botFatherChat);
+                saveChats();
+                renderChats();
+            }
+            openChat(botFatherChat);
+            
+            if (botFatherChat.messages.length === 0) {
+                setTimeout(() => {
+                    const reply = "Привет! Я NET BotFather. Я помогу тебе создать твоего бота. Отправь мне /newbot, чтобы начать.";
+                    appendMessage(reply, false);
+                    botFatherChat.messages.push({text: reply, sent: false});
+                    saveChats();
+                }, 500);
+            }
+        });
+
+        chatSearch.addEventListener("input", renderChats);
+        renderChats();
+    </script>
+</body>
+</html>

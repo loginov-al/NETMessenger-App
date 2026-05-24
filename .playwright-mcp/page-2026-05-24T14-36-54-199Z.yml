@@ -1,0 +1,100 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - button "Назад" [ref=e3] [cursor=pointer]:
+      - generic [ref=e4]: arrow_back
+    - heading "Настройки профиля" [level=1] [ref=e5]
+    - button "Сменить тему" [ref=e6] [cursor=pointer]:
+      - generic [ref=e7]: dark_mode
+  - main [ref=e8]:
+    - generic [ref=e9]:
+      - generic [ref=e10]:
+        - generic [ref=e11]: person
+        - generic [ref=e12] [cursor=pointer]:
+          - generic [ref=e13]: photo_camera
+          - text: Сменить
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]:
+            - generic [ref=e17]: Имя
+            - textbox "Имя" [ref=e18]: Алексей
+          - generic [ref=e19]:
+            - generic [ref=e20]: Фамилия
+            - textbox "Фамилия" [ref=e21]: Смирнов
+        - generic [ref=e22]:
+          - generic [ref=e23]: О себе
+          - textbox "О себе" [ref=e24]: Люблю программировать
+        - button "Сохранить изменения" [ref=e26] [cursor=pointer]
+    - generic [ref=e27]:
+      - heading "Безопасность и вход" [level=2] [ref=e28]
+      - generic [ref=e29]:
+        - button "phone_iphone Номер телефона +7 (999) 123-45-67 chevron_right" [ref=e30] [cursor=pointer]:
+          - generic [ref=e31]: phone_iphone
+          - generic [ref=e32]:
+            - generic [ref=e33]: Номер телефона
+            - generic [ref=e34]: +7 (999) 123-45-67
+          - generic [ref=e35]: chevron_right
+        - button "passkey Ключи доступа (Passkeys) Входить по отпечатку пальца или Face ID chevron_right" [ref=e36] [cursor=pointer]:
+          - generic [ref=e37]: passkey
+          - generic [ref=e38]:
+            - generic [ref=e39]: Ключи доступа (Passkeys)
+            - generic [ref=e40]: Входить по отпечатку пальца или Face ID
+          - generic [ref=e41]: chevron_right
+        - button "password Двухэтапная аутентификация Отключено chevron_right" [ref=e42] [cursor=pointer]:
+          - generic [ref=e43]: password
+          - generic [ref=e44]:
+            - generic [ref=e45]: Двухэтапная аутентификация
+            - generic [ref=e46]: Отключено
+          - generic [ref=e47]: chevron_right
+        - button "logout Выйти из аккаунта" [ref=e48] [cursor=pointer]:
+          - generic [ref=e49]: logout
+          - generic [ref=e51]: Выйти из аккаунта
+    - generic [ref=e52]:
+      - heading "Настройка интерфейса" [level=2] [ref=e53]
+      - generic [ref=e54]:
+        - generic [ref=e55]:
+          - generic [ref=e56]: Название приложения
+          - textbox "Название приложения" [ref=e57]: NETMessenger
+        - generic [ref=e58]:
+          - generic [ref=e59]: Основной цвет
+          - textbox "Основной цвет" [ref=e60] [cursor=pointer]: "#256c2d"
+        - generic [ref=e61]:
+          - generic [ref=e62]: Размер текста
+          - combobox "Размер текста" [ref=e63]:
+            - option "Маленький"
+            - option "Средний" [selected]
+            - option "Большой"
+        - generic [ref=e64]:
+          - generic [ref=e65]: Стиль сообщений
+          - combobox "Стиль сообщений" [ref=e66]:
+            - option "Скруглённые" [selected]
+            - option "Классические"
+        - generic [ref=e67]:
+          - generic [ref=e68]: Ширина боковой панели
+          - combobox "Ширина боковой панели" [ref=e69]:
+            - option "Узкая"
+            - option "Стандартная" [selected]
+            - option "Широкая"
+        - generic [ref=e70]:
+          - generic [ref=e71]: Компактный режим
+          - checkbox "Компактный режим" [ref=e72]
+        - generic [ref=e73]:
+          - button "Сбросить" [ref=e74] [cursor=pointer]
+          - button "Сохранить интерфейс" [ref=e75] [cursor=pointer]
+    - generic [ref=e76]:
+      - heading "Настройки приложения" [level=2] [ref=e77]
+      - generic [ref=e78]:
+        - generic [ref=e79]:
+          - generic [ref=e80]: notifications
+          - generic [ref=e82]: Уведомления и звуки
+          - checkbox [checked] [ref=e83]
+        - generic [ref=e84]:
+          - generic [ref=e85]: visibility
+          - generic [ref=e87]: Предпросмотр ссылок
+          - checkbox [checked] [ref=e88]
+        - button "language Язык Русский chevron_right" [ref=e89] [cursor=pointer]:
+          - generic [ref=e90]: language
+          - generic [ref=e91]:
+            - generic [ref=e92]: Язык
+            - generic [ref=e93]: Русский
+          - generic [ref=e94]: chevron_right
+  - status

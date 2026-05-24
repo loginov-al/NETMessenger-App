@@ -1,0 +1,2 @@
+[   30493ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://esm.run/@material/web@1.5.1/typography/md-typescale-styles.js?bundle:0
+[   30493ms] [ERROR] Material Web не загрузился: TypeError: Failed to fetch dynamically imported module: https://esm.run/@material/web@1.5.1/typography/md-typescale-styles.js?bundle @ http://127.0.0.1:4912/home:19

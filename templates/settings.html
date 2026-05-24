@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NETMessenger Web - Настройки профиля</title>
+    <link rel="icon" href="{% if cdn_base %}{{ cdn_base }}{% endif %}/static/favicon.png">
+    {% include '_pwa.html' %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --md-sys-color-primary: #256c2d;
+            --md-sys-color-on-primary: #ffffff;
+            --md-sys-color-primary-container: #a6ff9f;
+            --md-sys-color-on-primary-container: #06210a;
+            --md-sys-color-secondary-container: #d8ead4;
+            --md-sys-color-surface: #fbfdf7;
+            --md-sys-color-surface-container: #eef5ec;
+            --md-sys-color-surface-container-high: #e6eee3;
+            --md-sys-color-on-surface: #191d18;
+            --md-sys-color-on-surface-variant: #424940;
+            --md-sys-color-outline-variant: #c2c9bd;
+            --md-ref-typeface-brand: "Roboto";
+            --md-ref-typeface-plain: "Roboto";
+        }
+
+        :root.dark-theme {
+            --md-sys-color-surface: #1a1c19;
+            --md-sys-color-on-surface: #e2e3df;
+            --md-sys-color-surface-container: #2d312c;
+            --md-sys-color-surface-container-high: #3f443e;
+            --md-sys-color-outline-variant: #424940;
+            --md-sys-color-on-surface-variant: #c2c9bd;
+            --md-sys-color-primary-container: #0f5216;
+            --md-sys-color-on-primary-container: #a6ff9f;
+        }
+
+        * { box-sizing: border-box; }
+        
+        body {
+            min-height: 100vh;
+            margin: 0;
+            font-size: var(--app-font-size, 16px);
+            background: var(--md-sys-color-surface-container);
+            color: var(--md-sys-color-on-surface);
+            font-family: "Roboto", sans-serif;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ui-grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .ui-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 8px 0;
+        }
+
+        .ui-row label {
+            font-size: 14px;
+            color: var(--md-sys-color-on-surface);
+        }
+
+        .color-input {
+            width: 48px;
+            height: 36px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background: transparent;
+        }
+
+        .ui-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 8px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 24px;
+            background: var(--md-sys-color-surface);
+            border-bottom: 1px solid var(--md-sys-color-outline-variant);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 500;
+        }
+
+        .settings-container {
+            max-width: 680px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 32px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--md-sys-color-surface);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .profile-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 16px;
+        }
+
+        .avatar-wrapper {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .avatar-icon {
+            font-size: 64px;
+        }
+
+        .avatar-edit-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            padding: 8px 0;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .avatar-wrapper:hover .avatar-edit-overlay {
+            opacity: 1;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-row > * {
+            flex: 1;
+        }
+
+        .icon-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            background: transparent;
+            color: var(--md-sys-color-on-surface-variant);
+            cursor: pointer;
+        }
+
+        .icon-btn:hover {
+            background: var(--md-sys-color-surface-container-high);
+        }
+
+        .text-input, .text-area {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--md-sys-color-outline-variant);
+            border-radius: 14px;
+            background: var(--md-sys-color-surface);
+            color: var(--md-sys-color-on-surface);
+            font: inherit;
+            outline: none;
+        }
+
+        .text-input:focus, .text-area:focus {
+            border-color: var(--md-sys-color-primary);
+        }
+
+        .text-area {
+            min-height: 88px;
+            resize: vertical;
+        }
+
+        .field-label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            color: var(--md-sys-color-on-surface-variant);
+        }
+
+        .field-group {
+            margin-bottom: 16px;
+        }
+
+        .btn-primary, .btn-outlined {
+            border: none;
+            border-radius: 14px;
+            padding: 12px 20px;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+        }
+
+        .btn-outlined {
+            background: transparent;
+            color: var(--md-sys-color-primary);
+            border: 1px solid var(--md-sys-color-outline-variant);
+        }
+
+        .settings-list {
+            display: grid;
+            gap: 2px;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .settings-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            width: 100%;
+            padding: 14px 16px;
+            border: none;
+            background: var(--md-sys-color-surface-container-high);
+            color: var(--md-sys-color-on-surface);
+            font: inherit;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .settings-item:hover {
+            background: var(--md-sys-color-surface-container);
+        }
+
+        .settings-item .item-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .settings-item .item-title {
+            font-size: 15px;
+        }
+
+        .settings-item .item-sub {
+            margin-top: 2px;
+            font-size: 13px;
+            color: var(--md-sys-color-on-surface-variant);
+        }
+
+        .settings-item.danger {
+            color: #d32f2f;
+        }
+
+        .settings-item.danger .material-symbols-outlined {
+            color: #d32f2f;
+        }
+
+        .toggle {
+            width: 44px;
+            height: 24px;
+            accent-color: var(--md-sys-color-primary);
+        }
+
+        .section-title {
+            color: var(--md-sys-color-primary);
+            font-weight: 500;
+            font-size: 14px;
+            letter-spacing: 0.05em;
+            margin: 0 0 16px 8px;
+            text-transform: uppercase;
+        }
+
+        .material-symbols-outlined {
+            font-family: "Material Symbols Outlined";
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .toast {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            z-index: 100;
+            max-width: min(360px, calc(100vw - 44px));
+            padding: 14px 18px;
+            border-radius: 18px;
+            background: #191d18;
+            color: #fff;
+            box-shadow: 0 16px 36px rgba(25, 29, 24, 0.25);
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(12px);
+            transition: opacity 180ms ease, transform 180ms ease;
+        }
+
+        .toast.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                flex-direction: column;
+                gap: 16px;
+            }
+            .settings-container {
+                padding: 16px;
+            }
+            .card {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <button class="icon-btn" type="button" onclick="window.location.href='/home'" aria-label="Назад">
+            <span class="material-symbols-outlined">arrow_back</span>
+        </button>
+        <h1>Настройки профиля</h1>
+        <div style="flex: 1;"></div>
+        <button class="icon-btn" id="themeToggle" type="button" aria-label="Сменить тему">
+            <span class="material-symbols-outlined">dark_mode</span>
+        </button>
+    </header>
+
+    <main class="settings-container">
+        <section class="card profile-header">
+            <div class="avatar-wrapper" onclick="document.getElementById('avatarUpload').click()">
+                <span class="material-symbols-outlined avatar-icon">person</span>
+                <div class="avatar-edit-overlay">
+                    <span class="material-symbols-outlined" style="font-size: 16px;">photo_camera</span>
+                    Сменить
+                </div>
+                <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
+            </div>
+            
+            <div style="width: 100%; max-width: 400px; margin-top: 16px;">
+                <div class="form-row">
+                    <div class="field-group">
+                        <label class="field-label" for="firstName">Имя</label>
+                        <input class="text-input" id="firstName" value="Алексей">
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label" for="lastName">Фамилия</label>
+                        <input class="text-input" id="lastName" value="Смирнов">
+                    </div>
+                </div>
+                <div class="field-group">
+                    <label class="field-label" for="bio">О себе</label>
+                    <textarea class="text-area" id="bio">Люблю программировать</textarea>
+                </div>
+                <div style="margin-top: 16px; text-align: center;">
+                    <button class="btn-primary" id="saveProfileBtn" type="button">Сохранить изменения</button>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title">Безопасность и вход</h2>
+            <div class="settings-list">
+                <button class="settings-item" type="button" id="phoneItem">
+                    <span class="material-symbols-outlined">phone_iphone</span>
+                    <div class="item-body">
+                        <div class="item-title">Номер телефона</div>
+                        <div class="item-sub">+7 (999) 123-45-67</div>
+                    </div>
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+                <button class="settings-item" type="button" id="passkeyItem">
+                    <span class="material-symbols-outlined">passkey</span>
+                    <div class="item-body">
+                        <div class="item-title">Ключи доступа (Passkeys)</div>
+                        <div class="item-sub">Входить по отпечатку пальца или Face ID</div>
+                    </div>
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+                <button class="settings-item" type="button" id="2faItem">
+                    <span class="material-symbols-outlined">password</span>
+                    <div class="item-body">
+                        <div class="item-title">Двухэтапная аутентификация</div>
+                        <div class="item-sub">Отключено</div>
+                    </div>
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+                <button class="settings-item danger" type="button" id="logoutItem">
+                    <span class="material-symbols-outlined">logout</span>
+                    <div class="item-body">
+                        <div class="item-title">Выйти из аккаунта</div>
+                    </div>
+                </button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="section-title" style="margin-top: 0;">Настройка интерфейса</h2>
+            <div class="ui-grid">
+                <div class="field-group">
+                    <label class="field-label" for="uiAppTitle">Название приложения</label>
+                    <input class="text-input" id="uiAppTitle">
+                </div>
+
+                <div class="ui-row">
+                    <label for="uiPrimaryColor">Основной цвет</label>
+                    <input type="color" id="uiPrimaryColor" class="color-input" value="#256c2d">
+                </div>
+
+                <div class="ui-row">
+                    <label for="uiFontSize">Размер текста</label>
+                    <select id="uiFontSize" style="padding: 10px 12px; border-radius: 12px; border: 1px solid var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface); color: var(--md-sys-color-on-surface);">
+                        <option value="small">Маленький</option>
+                        <option value="medium" selected>Средний</option>
+                        <option value="large">Большой</option>
+                    </select>
+                </div>
+
+                <div class="ui-row">
+                    <label for="uiBubbleStyle">Стиль сообщений</label>
+                    <select id="uiBubbleStyle" style="padding: 10px 12px; border-radius: 12px; border: 1px solid var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface); color: var(--md-sys-color-on-surface);">
+                        <option value="rounded">Скруглённые</option>
+                        <option value="classic">Классические</option>
+                    </select>
+                </div>
+
+                <div class="ui-row">
+                    <label for="uiSidebarWidth">Ширина боковой панели</label>
+                    <select id="uiSidebarWidth" style="padding: 10px 12px; border-radius: 12px; border: 1px solid var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface); color: var(--md-sys-color-on-surface);">
+                        <option value="280">Узкая</option>
+                        <option value="320" selected>Стандартная</option>
+                        <option value="360">Широкая</option>
+                    </select>
+                </div>
+
+                <div class="ui-row">
+                    <label for="uiCompactMode">Компактный режим</label>
+                    <input type="checkbox" id="uiCompactMode" class="toggle">
+                </div>
+
+                <div class="ui-actions">
+                    <button class="btn-outlined" id="resetUiBtn" type="button">Сбросить</button>
+                    <button class="btn-primary" id="saveUiBtn" type="button">Сохранить интерфейс</button>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title">Настройки приложения</h2>
+            <div class="settings-list">
+                <div class="settings-item" style="cursor: default;">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <div class="item-body">
+                        <div class="item-title">Уведомления и звуки</div>
+                    </div>
+                    <input type="checkbox" class="toggle" checked>
+                </div>
+                <div class="settings-item" style="cursor: default;">
+                    <span class="material-symbols-outlined">visibility</span>
+                    <div class="item-body">
+                        <div class="item-title">Предпросмотр ссылок</div>
+                    </div>
+                    <input type="checkbox" class="toggle" checked>
+                </div>
+                <button class="settings-item" type="button">
+                    <span class="material-symbols-outlined">language</span>
+                    <div class="item-body">
+                        <div class="item-title">Язык</div>
+                        <div class="item-sub">Русский</div>
+                    </div>
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="{% if cdn_base %}{{ cdn_base }}{% endif %}/static/cache-register.js"></script>
+    <script src="{% if cdn_base %}{{ cdn_base }}{% endif %}/static/ui-prefs.js"></script>
+    <script>
+        const themeToggle = document.getElementById("themeToggle");
+        const toast = document.getElementById("toast");
+        let toastTimer;
+
+        applyUiPrefs();
+
+        function setThemeIcon(isDark) {
+            const icon = themeToggle.querySelector(".material-symbols-outlined, md-icon");
+            if (icon) icon.textContent = isDark ? "light_mode" : "dark_mode";
+        }
+
+        const isDark = localStorage.getItem("theme") === "dark";
+        if (isDark) {
+            document.documentElement.classList.add("dark-theme");
+            setThemeIcon(true);
+        }
+
+        themeToggle.addEventListener("click", () => {
+            document.documentElement.classList.toggle("dark-theme");
+            const darkActive = document.documentElement.classList.contains("dark-theme");
+            setThemeIcon(darkActive);
+            localStorage.setItem("theme", darkActive ? "dark" : "light");
+        });
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add("is-visible");
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove("is-visible"), 2600);
+        }
+
+        // Загрузка сохраненных данных профиля
+        const firstNameInput = document.getElementById("firstName");
+        const lastNameInput = document.getElementById("lastName");
+        const bioInput = document.getElementById("bio");
+
+        const savedFirstName = localStorage.getItem("profileFirstName");
+        const savedLastName = localStorage.getItem("profileLastName");
+        const savedBio = localStorage.getItem("profileBio");
+
+        if (savedFirstName) firstNameInput.value = savedFirstName;
+        if (savedLastName) lastNameInput.value = savedLastName;
+        if (savedBio) bioInput.value = savedBio;
+
+        // Сохранение профиля
+        document.getElementById('saveProfileBtn').addEventListener('click', () => {
+            localStorage.setItem("profileFirstName", firstNameInput.value);
+            localStorage.setItem("profileLastName", lastNameInput.value);
+            localStorage.setItem("profileBio", bioInput.value);
+            showToast("Изменения сохранены!");
+        });
+
+        // Загрузка сохраненного аватара
+        const savedAvatar = localStorage.getItem("profileAvatar");
+        if (savedAvatar) {
+            const avatarWrapper = document.querySelector('.avatar-wrapper');
+            avatarWrapper.style.backgroundImage = `url(${savedAvatar})`;
+            const avatarIcon = avatarWrapper.querySelector('.avatar-icon');
+            if (avatarIcon) avatarIcon.style.display = 'none';
+        }
+
+        // Загрузка аватара (превью и сохранение)
+        document.getElementById('avatarUpload').addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const imgDataUrl = e.target.result;
+                    const avatarWrapper = document.querySelector('.avatar-wrapper');
+                    avatarWrapper.style.backgroundImage = `url(${imgDataUrl})`;
+                    const avatarIcon = avatarWrapper.querySelector('.avatar-icon');
+                    if (avatarIcon) avatarIcon.style.display = 'none';
+                    
+                    // Сохраняем в localStorage, чтобы фото не слетало при перезагрузке
+                    try {
+                        localStorage.setItem("profileAvatar", imgDataUrl);
+                        showToast("Фотография профиля обновлена");
+                    } catch (error) {
+                        showToast("Ошибка сохранения: фото слишком большое");
+                    }
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        // Разделы безопасности
+        document.getElementById('passkeyItem').addEventListener('click', () => {
+            if (confirm("Хотите создать новый ключ доступа (Passkey) для этого устройства?")) {
+                showToast("Ключ доступа успешно создан!");
+            }
+        });
+
+        document.getElementById('phoneItem').addEventListener('click', () => {
+            prompt("Введите новый номер телефона:");
+            showToast("Номер телефона изменен");
+        });
+
+        document.getElementById('2faItem').addEventListener('click', () => {
+            prompt("Введите облачный пароль для включения 2FA:");
+            showToast("Двухэтапная аутентификация включена");
+        });
+
+        document.getElementById('logoutItem').addEventListener('click', () => {
+            if (confirm("Вы уверены, что хотите выйти?")) {
+                window.location.href = "/";
+            }
+        });
+
+        // Настройка интерфейса
+        const uiAppTitle = document.getElementById("uiAppTitle");
+        const uiPrimaryColor = document.getElementById("uiPrimaryColor");
+        const uiFontSize = document.getElementById("uiFontSize");
+        const uiBubbleStyle = document.getElementById("uiBubbleStyle");
+        const uiSidebarWidth = document.getElementById("uiSidebarWidth");
+        const uiCompactMode = document.getElementById("uiCompactMode");
+
+        function fillUiForm(prefs = loadUiPrefs()) {
+            uiAppTitle.value = prefs.appTitle;
+            uiPrimaryColor.value = prefs.primaryColor;
+            uiFontSize.value = prefs.fontSize;
+            uiBubbleStyle.value = prefs.bubbleStyle;
+            uiSidebarWidth.value = String(prefs.sidebarWidth);
+            uiCompactMode.checked = Boolean(prefs.compactMode);
+        }
+
+        fillUiForm();
+
+        document.getElementById("saveUiBtn").addEventListener("click", () => {
+            const prefs = {
+                appTitle: uiAppTitle.value.trim() || "NETMessenger",
+                primaryColor: uiPrimaryColor.value,
+                fontSize: uiFontSize.value,
+                bubbleStyle: uiBubbleStyle.value,
+                sidebarWidth: Number(uiSidebarWidth.value),
+                compactMode: uiCompactMode.checked
+            };
+            saveUiPrefs(prefs);
+            applyUiPrefs(prefs);
+            showToast("Интерфейс сохранён");
+        });
+
+        document.getElementById("resetUiBtn").addEventListener("click", () => {
+            if (!confirm("Сбросить настройки интерфейса к стандартным?")) return;
+            const prefs = resetUiPrefs();
+            fillUiForm(prefs);
+            showToast("Настройки интерфейса сброшены");
+        });
+    </script>
+</body>
+</html>

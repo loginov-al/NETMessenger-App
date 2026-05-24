@@ -1,0 +1,75 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]: arrow_back
+    - heading "Настройки профиля" [level=1] [ref=e4]
+    - generic "Сменить тему" [ref=e5]: dark_mode
+  - main [ref=e6]:
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - generic [ref=e9]: person
+        - generic [ref=e10] [cursor=pointer]:
+          - generic [ref=e11]: photo_camera
+          - text: Сменить
+      - generic [ref=e13]: Сохранить изменения
+    - generic [ref=e14]:
+      - heading "Безопасность и вход" [level=2] [ref=e15]
+      - generic [ref=e16]:
+        - generic [ref=e17]:
+          - text: phone_iphone
+          - generic [ref=e18]: Номер телефона
+          - generic [ref=e19]: +7 (999) 123-45-67
+          - text: chevron_right
+        - generic [ref=e20]:
+          - text: passkey
+          - generic [ref=e21]: Ключи доступа (Passkeys)
+          - generic [ref=e22]: Входить по отпечатку пальца или Face ID
+          - text: chevron_right
+        - generic [ref=e23]:
+          - text: password
+          - generic [ref=e24]: Двухэтапная аутентификация
+          - generic [ref=e25]: Отключено
+          - text: chevron_right
+        - generic [ref=e26]:
+          - text: logout
+          - generic [ref=e27]: Выйти из аккаунта
+    - generic [ref=e28]:
+      - heading "Настройка интерфейса" [level=2] [ref=e29]
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - generic [ref=e32]: Основной цвет
+          - textbox "Основной цвет" [ref=e33] [cursor=pointer]: "#256c2d"
+        - generic [ref=e34]:
+          - generic [ref=e35]: Размер текста
+          - combobox "Размер текста" [ref=e36]:
+            - option "Маленький"
+            - option "Средний" [selected]
+            - option "Большой"
+        - generic [ref=e37]:
+          - generic [ref=e38]: Стиль сообщений
+          - combobox "Стиль сообщений" [ref=e39]:
+            - option "Скруглённые" [selected]
+            - option "Классические"
+        - generic [ref=e40]:
+          - generic [ref=e41]: Ширина боковой панели
+          - combobox "Ширина боковой панели" [ref=e42]:
+            - option "Узкая"
+            - option "Стандартная" [selected]
+            - option "Широкая"
+        - generic [ref=e44]: Компактный режим
+        - generic [ref=e45]:
+          - generic [ref=e46]: Сбросить
+          - generic [ref=e47]: Сохранить интерфейс
+    - generic [ref=e48]:
+      - heading "Настройки приложения" [level=2] [ref=e49]
+      - generic [ref=e50]:
+        - generic [ref=e51]:
+          - text: notifications
+          - generic [ref=e52]: Уведомления и звуки
+        - generic [ref=e53]:
+          - text: visibility
+          - generic [ref=e54]: Предпросмотр ссылок
+        - generic [ref=e55]:
+          - text: language
+          - generic [ref=e56]: Язык
+          - generic [ref=e57]: Русский
+  - status

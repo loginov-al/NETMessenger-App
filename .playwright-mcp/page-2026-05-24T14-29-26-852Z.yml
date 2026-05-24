@@ -1,0 +1,12 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - complementary "Список чатов" [ref=e3]:
+      - generic [ref=e5]:
+        - img "NETMessenger" [ref=e6]
+        - paragraph [ref=e7]: NETMessenger
+      - paragraph [ref=e11]: Пока здесь пусто
+    - generic [ref=e14]:
+      - generic [ref=e16]: forum
+      - generic [ref=e17]: Выберите чат, чтобы начать общение
+      - paragraph [ref=e18]: Отправляйте и получайте сообщения с любого устройства.
+  - status

@@ -1,0 +1,11 @@
+- main [ref=e2]:
+  - heading "Авторизация в NETMessenger" [level=1] [ref=e3]
+  - generic [ref=e4]:
+    - paragraph [ref=e5]: Откройте NETMessenger на устройстве
+    - paragraph [ref=e6]: Откройте настройки > Авторизация в новом аккаунте > Подключение устройства
+    - paragraph [ref=e7]: Отсканируйте QR-код, и вас перебросит в аккаунт
+    - generic "QR-код для входа" [ref=e8]:
+      - img "QR-код для входа в NETMessenger" [ref=e9]
+    - generic [ref=e10]:
+      - button "Войти через телефон" [ref=e11] [cursor=pointer]
+      - button "Войти через ключ доступа" [ref=e12] [cursor=pointer]

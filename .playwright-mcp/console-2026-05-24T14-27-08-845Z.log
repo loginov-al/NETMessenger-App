@@ -1,0 +1,14 @@
+[     172ms] TypeError: Cannot read properties of undefined (reading 'trim')
+    at renderChats (http://127.0.0.1:4912/home:918:44)
+    at http://127.0.0.1:4912/home:1458:9
+[   24168ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://esm.sh/lit@%5E2.7.4%20%7C%7C%20%5E3.0.0?target=es2022:0
+[   24168ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://esm.sh/@material/web@1.5.1/es2022/typography/md-typescale-styles.mjs:0
+[   24168ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://esm.sh/lit@%5E3.3.1/decorators?target=es2022:0
+[   24168ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://esm.sh/lit@%5E3.3.1/directives/class-map?target=es2022:0
+[   24168ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://esm.sh/lit@%5E3.3.1/directives/live?target=es2022:0
+[   24168ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://esm.sh/lit@%5E3.3.1/directives/style-map?target=es2022:0
+[   24168ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://esm.sh/lit@%5E3.3.1/directives/when?target=es2022:0
+[   24169ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://esm.sh/lit@%5E3.3.1/static-html?target=es2022:0
+[   24169ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://esm.sh/lit@%5E3.3.1?target=es2022:0
+[   24169ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://esm.sh/tslib@%5E2.4.0?target=es2022:0
+[   24169ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://esm.sh/@material/web@1.5.1/es2022/all.mjs:0
