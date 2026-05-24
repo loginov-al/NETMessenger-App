@@ -38,21 +38,49 @@ sudo bash deploy/setup.sh
 
 ---
 
-## 4. Timeweb Cloud CDN
+## 4. SSL от Timeweb
 
-В панели Timeweb → CDN → источник (origin):
+Сейчас DNS `web.netmessenger.su` → `185.200.241.9` (напрямую на VPS).  
+SSL в панели Timeweb **сам по себе не открывает порт 443** на сервере — его нужно «подключить» одним из способов ниже.
+
+### Вариант A — сертификат Timeweb на VPS (DNS уже на VPS)
+
+1. Timeweb Cloud → **SSL-сертификаты** → ваш сертификат для `web.netmessenger.su`
+2. Скопируйте **CRT** и **Private KEY** на сервер:
+
+```bash
+sudo nano /etc/ssl/web.netmessenger.su.crt
+sudo nano /etc/ssl/web.netmessenger.su.key
+```
+
+3. Установите в nginx:
+
+```bash
+cd ~/app-we/NETMessenger-App
+git pull
+sudo bash deploy/install-timeweb-ssl.sh
+```
+
+### Вариант B — SSL через балансировщик Timeweb
+
+1. Timeweb → **Балансировщики** → SSL для `web.netmessenger.su`
+2. Backend: ваш VPS, порт **80**
+3. DNS: A-запись `web.netmessenger.su` → **IP балансировщика** (не IP VPS)
+
+### Вариант C — CDN для статики (у вас уже есть)
+
+`4opwz855t4.cdn.twcstorage.ru` — это CDN **для файлов**, не для всего сайта.  
+Он не заменяет HTTPS для `web.netmessenger.su`.
+
+---
+
+## 5. Timeweb Cloud CDN (статика)
+
+В `.env` / `/etc/netmessenger/web.env`:
 
 ```
-http://185.200.241.9
+CDN_BASE=https://4opwz855t4.cdn.twcstorage.ru
 ```
-
-или
-
-```
-http://web.netmessenger.su
-```
-
-SSL включается **в Timeweb**, на VPS только HTTP.
 
 Опционально в `/etc/netmessenger/web.env`:
 
@@ -68,7 +96,7 @@ sudo systemctl restart netmessenger-web
 
 ---
 
-## 5. Проверка
+## 6. Проверка
 
 ```bash
 curl -I http://127.0.0.1/home
@@ -76,7 +104,9 @@ sudo systemctl status netmessenger-web
 sudo nginx -t
 ```
 
-В браузере: **https://web.netmessenger.su**
+В браузере: **http://web.netmessenger.su/home** (пока не настроен HTTPS)
+
+Если `https://` не открывается — см. раздел **4. SSL от Timeweb**.
 
 ---
 

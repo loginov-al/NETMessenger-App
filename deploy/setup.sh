@@ -51,6 +51,7 @@ systemctl restart netmessenger-web
 
 echo ""
 echo "Готово!"
-echo "  Локально:  curl http://127.0.0.1/home"
-echo "  Сайт:      https://web.netmessenger.su"
+echo "  Проверка:  curl http://127.0.0.1/home"
+echo "  HTTP:      http://web.netmessenger.su/home"
+echo "  HTTPS:     sudo bash deploy/install-timeweb-ssl.sh"
 echo "  Статус:    systemctl status netmessenger-web"
