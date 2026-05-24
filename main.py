@@ -1,11 +1,13 @@
 import os
 
 from flask import Flask, render_template, request, send_from_directory
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 
-# CDN Timeweb кэширует ответы origin, если origin отдаёт Cache-Control.
-# Пример: https://4opwz855t4.cdn.twcstorage.ru/static/ui-prefs.js
+# За nginx / Timeweb CDN
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
+
 CDN_BASE = os.environ.get("CDN_BASE", "")
 
 
@@ -60,6 +62,11 @@ def home():
 @app.route("/settings")
 def settings():
     return render_template("settings.html")
+
+
+@app.route("/health")
+def health():
+    return {"status": "ok"}
 
 
 if __name__ == "__main__":
